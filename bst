@@ -243,3 +243,86 @@ public:
         return root;
     }
 };
+
+# 🌳 1382. Balance a Binary Search Tree (LeetCode)
+
+## Problem Statement
+Given the root of a Binary Search Tree (BST), return a **balanced BST** with the same node values.  
+If there is more than one answer, return any of them.
+
+A **balanced BST** is defined as a tree such that the height of the two subtrees of every node never differs by more than 1.
+
+---
+
+## Approach 🚀
+The main idea is to **flatten the BST into a sorted array (using inorder traversal)** and then **rebuild it as a balanced BST**.
+
+### Steps:
+1. **Inorder Traversal**:  
+   - Perform an inorder traversal of the BST.  
+   - This gives a sorted list of all node values.
+
+2. **Build Balanced BST**:  
+   - Use the sorted array to construct the BST again.  
+   - Pick the middle element as the root (to keep balance).  
+   - Recursively build the left subtree from the left half of the array.  
+   - Recursively build the right subtree from the right half.
+
+This works because the inorder of a BST is always sorted.
+
+---
+
+## Complexity ⏳
+- **Time Complexity**:  
+  - Inorder traversal → `O(N)`  
+  - Building balanced BST → `O(N)`  
+  - **Total = O(N)**  
+- **Space Complexity**:  
+  - Storing inorder traversal → `O(N)`  
+  - Recursive stack → `O(log N)` (for balanced tree)
+
+---
+
+## Code 💻
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    // Step 1: Inorder traversal to get sorted values
+    void inorder(TreeNode* root, vector<int>& temp) {
+        if (!root) return;
+        inorder(root->left, temp);
+        temp.push_back(root->val);
+        inorder(root->right, temp);
+    }
+
+    // Step 2: Build balanced BST from sorted array
+    TreeNode* createTree(int l, int r, vector<int>& temp) {
+        if (l > r) return NULL;
+        int mid = l + (r - l) / 2;
+
+        TreeNode* root = new TreeNode(temp[mid]);
+        root->left = createTree(l, mid - 1, temp);
+        root->right = createTree(mid + 1, r, temp);
+        return root;
+    }
+
+    // Step 3: Driver function
+    TreeNode* balanceBST(TreeNode* root) {
+        vector<int> temp;
+        inorder(root, temp);  // Flatten BST into sorted list
+        return createTree(0, temp.size() - 1, temp);  // Build balanced BST
+    }
+};
+
