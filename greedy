@@ -1,0 +1,107 @@
+# 🚤 LeetCode 881 – Boats to Save People
+
+## Problem Statement
+You are given an array `people` where `people[i]` is the weight of the `i`-th person, and an integer `limit` which is the maximum weight a boat can carry.  
+
+- Each boat carries **at most two people**.  
+- The sum of weights of the people on board must be **at most `limit`**.  
+- Return the **minimum number of boats** needed to carry everyone.
+
+---
+
+## Approach 🚀
+- **Sort the array** of people’s weights.  
+- Use a **two-pointer greedy strategy**:
+  - Pair the **lightest** (`l`) and **heaviest** (`r`) person if possible.  
+  - If they fit → move both pointers.  
+  - Otherwise → put the heaviest person (`r`) alone in a boat.  
+- Always increment the boat counter.  
+- Continue until all people are assigned.
+
+---
+
+## Complexity ⏳
+- **Time Complexity:** `O(n log n)` (sorting dominates).  
+- **Space Complexity:** `O(1)` (just pointers and counters).  
+
+---
+
+## C++ Solution 💻
+```cpp
+class Solution {
+public:
+    int numRescueBoats(vector<int>& people, int limit) {
+        int n = people.size();
+        int l = 0, r = n - 1;
+        sort(people.begin(), people.end());
+        int boats = 0;
+
+        while (l <= r) {
+            if (people[l] + people[r] <= limit) {
+                l++;
+                r--;
+            } else {
+                r--;
+            }
+            boats++;
+        }
+        return boats;
+    }
+};
+
+# 🎯 LeetCode 948 – Bag of Tokens
+
+## Problem Statement
+You are given an integer array `tokens` and an initial integer `power`.
+
+- You can play tokens **face up** (spend `power` and gain `+1` score).  
+- You can play tokens **face down** (spend `1` score and regain `power`).  
+- Each token can be used **at most once**.  
+- Your goal is to maximize your score and return it.
+
+---
+
+## Approach 🚀
+- **Sort tokens** to access the smallest and largest efficiently.  
+- Use **two pointers**:
+  - If you have enough `power`, play the **smallest token face up** to gain score.  
+  - Otherwise, if you have at least `1` score, play the **largest token face down** to regain power.  
+- Track the **maximum score** reached.  
+- Stop when no further moves are possible.  
+
+---
+
+## Complexity ⏳
+- **Time Complexity:** `O(n log n)` (sorting dominates).  
+- **Space Complexity:** `O(1)` (two pointers + counters).  
+
+---
+
+## C++ Solution 💻
+```cpp
+class Solution {
+public:
+    int bagOfTokensScore(vector<int>& tokens, int power) {
+        int n = tokens.size();
+        sort(tokens.begin(), tokens.end());
+
+        int score = 0, maxscore = 0;
+        int i = 0, j = n - 1;
+
+        while (i <= j) {
+            if (power >= tokens[i]) {
+                power -= tokens[i];
+                score += 1;
+                i++;
+                maxscore = max(maxscore, score);
+            } else if (score > 0) {
+                power += tokens[j];
+                score -= 1;
+                j--;
+            } else {
+                break;
+            }
+        }
+        return maxscore;
+    }
+};
