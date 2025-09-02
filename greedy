@@ -105,3 +105,53 @@ public:
         return maxscore;
     }
 };
+
+
+# 🎨 LeetCode 1578 – Minimum Time to Make Rope Colorful
+
+## Problem Statement
+You are given:
+- A string `colors` where each character represents the color of a balloon.
+- An integer array `neededTime` where `neededTime[i]` is the time to remove the `i`-th balloon.
+
+You must remove some balloons so that **no two adjacent balloons have the same color**.  
+Return the **minimum time** needed to achieve this.
+
+---
+
+## Approach 🚀
+- Traverse the balloons one by one.  
+- Whenever you find **consecutive balloons of the same color**, you must remove one.  
+- Greedy choice:  
+  - Always **keep the balloon with the maximum `neededTime`**.  
+  - Remove the rest → accumulate their times.  
+- Use a variable `prev` to track the maximum time in the current color group.
+
+---
+
+## Complexity ⏳
+- **Time Complexity:** `O(n)` (single pass through balloons).  
+- **Space Complexity:** `O(1)` (just counters).  
+
+---
+
+## C++ Solution 💻
+```cpp
+class Solution {
+public:
+    int minCost(string colors, vector<int>& neededTime) {
+        int n = colors.length();
+        int prev = 0;
+        int time = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (i > 0 && colors[i] != colors[i - 1]) {
+                prev = 0;
+            }
+            int cur = neededTime[i];
+            time += min(prev, cur);
+            prev = max(prev, cur);
+        }
+        return time;
+    }
+};
