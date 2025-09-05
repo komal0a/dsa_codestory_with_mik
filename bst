@@ -14,7 +14,7 @@ Given the `root` of a Binary Search Tree (BST), return the **minimum absolute di
    - The minimum absolute difference will always be between **two consecutive nodes** in this sorted order.
 
 2. **Steps**:  
-   - Perform an inorder traversal.  
+   - Perform an inorder traversal.   
    - Keep track of the previously visited node (`prev`).  
    - Update the minimum difference using `abs(root->val - prev->val)` whenever possible.  
 
